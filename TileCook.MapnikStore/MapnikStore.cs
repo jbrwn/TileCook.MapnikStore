@@ -19,6 +19,7 @@ namespace TileCook.MapnikStore
         {
             Mapnik.RegisterDefaultInputPlugins();
             m = new Map(256, 256);
+            m.BufferSize = 256;
             m.Load(resource);
         }
 
