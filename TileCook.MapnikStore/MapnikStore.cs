@@ -17,6 +17,7 @@ namespace TileCook.MapnikStore
 
         public MapnikStore(string resource)
         {
+            Mapnik.RegisterDefaultInputPlugins();
             m = new Map(256, 256);
             m.Load(resource);
         }
