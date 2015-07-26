@@ -21,6 +21,23 @@ namespace TileCook.MapnikStore
             m = new Map(256, 256);
             m.BufferSize = 256;
             m.Load(resource);
+
+            MinZoom = m.Parameters.ContainsKey("minzoom") ? Convert.ToInt32(m.Parameters["minzoom"]) : 0;
+            MaxZoom = m.Parameters.ContainsKey("maxzoom") ? Convert.ToInt32(m.Parameters["maxzoom"]) : 14;
+            if (m.Parameters.ContainsKey("bounds"))
+            {
+                string[] bounds = ((string)m.Parameters["bounds"]).Split(',');
+                Bounds = new Envelope(
+                    Convert.ToDouble(bounds[0]),
+                    Convert.ToDouble(bounds[1]),
+                    Convert.ToDouble(bounds[2]),
+                    Convert.ToDouble(bounds[3])
+                );
+            }
+            else
+            {
+                Bounds = new Envelope(-180, -90, 180, 90);
+            }
         }
 
         public VectorTile GetTile(ICoord coord)
@@ -45,10 +62,8 @@ namespace TileCook.MapnikStore
             }
         }
 
-        public double MinZoom { get; private set; }
-        public double MaxZoom { get; private set; }
-        public string Scheme { get; private set; }
-        public IPoint Center { get; private set; }
+        public int MinZoom { get; private set; }
+        public int MaxZoom { get; private set; }
         public IEnvelope Bounds { get; private set; }
     }
 }
