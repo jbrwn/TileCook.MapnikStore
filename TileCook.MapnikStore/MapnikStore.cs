@@ -66,15 +66,21 @@ namespace TileCook.MapnikStore
 
             NETMapnik.VectorTile tile = new NETMapnik.VectorTile(z, coord.X, coord.Y);
             m.Render(tile);
-            byte[] data = tile.GetData();
-            using (MemoryStream memory = new MemoryStream())
+            string solidKey = tile.IsSolid();
+            if (solidKey == null)
             {
-                using (GZipStream gzip = new GZipStream(memory, CompressionMode.Compress, true))
+                byte[] data = tile.GetData();
+                using (MemoryStream memory = new MemoryStream())
                 {
-                    gzip.Write(data, 0, data.Length);
+                    using (GZipStream gzip = new GZipStream(memory, CompressionMode.Compress, true))
+                    {
+                        gzip.Write(data, 0, data.Length);
+                    }
+                    return new VectorTile(memory.ToArray());
                 }
-                return new VectorTile(memory.ToArray());
             }
+            // return null if tile is solid
+            return null;
         }
 
         public string Id { get; private set; }
